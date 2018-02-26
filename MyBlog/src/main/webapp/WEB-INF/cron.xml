@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+<cron>
+<url>/cron/subscribe</url>
+<description>Digest of new messages in the last 24 hrs.</description>
+<schedule>every 3 minutes</schedule>
+</cron>
+</cronentries>
