@@ -11,16 +11,22 @@ import basketball.Landing;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class BasketServlet extends HttpServlet{
 	
+	private static final Logger _logger = Logger.getLogger(SubCronServlet.class.getName());
+	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		
 		UserService userService = UserServiceFactory.getUserService();
         User user = userService.getCurrentUser();
+        
+        _logger.info(user.toString());
         
         String guestbookName = req.getParameter("guestbookName");
         String title = req.getParameter("title");

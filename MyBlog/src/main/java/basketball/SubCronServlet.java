@@ -3,6 +3,11 @@ package basketball;
 import java.io.*;
 import java.util.*;
 
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,38 +19,14 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.*;
 
-//import javax.mail.*;
-//import javax.mail.internet.*;
-//import javax.activation.*;
-
-//import com.sendgrid.ASM;
-//import com.sendgrid.Attachments;
-//import com.sendgrid.BccSettings;
-//import com.sendgrid.ClickTrackingSetting;
-////import com.sendgrid.Client;
-//import com.sendgrid.Content;
-////import com.sendgrid.Email;
-//import com.sendgrid.FooterSetting;
-//import com.sendgrid.GoogleAnalyticsSetting;
-//import com.sendgrid.Mail;
-//import com.sendgrid.MailSettings;
-////import com.sendgrid.Method;
-//import com.sendgrid.OpenTrackingSetting;
-//import com.sendgrid.Personalization;
-////import com.sendgrid.Request;
-////import com.sendgrid.Response;
-//import com.sendgrid.SendGrid;
-//import com.sendgrid.Setting;
-//import com.sendgrid.SpamCheckSetting;
-//import com.sendgrid.SubscriptionTrackingSetting;
-//import com.sendgrid.TrackingSettings;
-import com.sendgrid.*;
 
 import basketball.Landing;
 
 
 @SuppressWarnings("serial")
 public class SubCronServlet extends HttpServlet {
+	
+	User user = null;
 
 	private static final Logger _logger = Logger.getLogger(SubCronServlet.class.getName());
 	
@@ -63,9 +44,7 @@ public class SubCronServlet extends HttpServlet {
 	   
 	 ArrayList<Landing> x = new ArrayList<Landing>();
 	 
-		
-	   UserService userService = UserServiceFactory.getUserService();
-       User user = userService.getCurrentUser();
+	
        
        Date now = new Date();
        //DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -92,31 +71,21 @@ public class SubCronServlet extends HttpServlet {
        	 }
 		}
 		
-		Email from = new Email("lopez.manuel214@gmail.com	");
-	    String subject = "Testing Blog";
-	    Email to = new Email("lopez.manuel214@gmail.com");
-	    Content content = new Content("text/plain", digest);
-	    
-	    Mail mail = new Mail(from, subject, to, content);
-	    
 
-	    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-	    _logger.info(sg.toString());
-	    Request request = new Request();
+	    Properties props = new Properties();
+	    Session session = Session.getDefaultInstance(props, null);
 
-      try {
-    	  
-    	  	  request.setMethod(Method.POST);
-          request.setEndpoint("mail/send");
-          request.setBody(mail.build());
-          Response response = sg.api(request);
-          System.out.println(response.getStatusCode());
-          System.out.println(response.getBody());
-          System.out.println(response.getHeaders());
-         
-         
-      } catch (Exception mex) {
-         mex.printStackTrace();
+	    try {
+	      Message msg = new MimeMessage(session);
+	      msg.setFrom(new InternetAddress("lopez.manuel214@gmail.com"));
+	      msg.addRecipient(Message.RecipientType.TO,
+	                       new InternetAddress("lopez.manuel214@gmail.com"));
+	      msg.setSubject("Digest of the last 24 hrs");
+	      msg.setText(digest);
+	      Transport.send(msg);
+	      
+	    } catch (Exception e) {
+	    		_logger.info("error");
       }
       
       resp.sendRedirect("/basketLand.jsp?guestbookName=" + "default");
@@ -125,6 +94,9 @@ public class SubCronServlet extends HttpServlet {
    @Override
    public void doPost(HttpServletRequest req, HttpServletResponse resp)
    throws IOException {
+	   
+	   UserService userService = UserServiceFactory.getUserService();
+       user = userService.getCurrentUser();
 	   doGet(req, resp);
    }
 } 

@@ -43,7 +43,7 @@
 %>
 
 		<h1>2018 NBA playoff predictions</h1>
-		<img src="http://i2.cdn.turner.com/nba/nba/dam/assets/160413134216-playoffs-2016-official-t1-creative.home-t1.jpg" alt="http://www.nba.com/news/2016-nba-playoffs-first-round-schedule/" align="middle" width="600" height="250">
+		<img src="http://i2.cdn.turner.com/nba/nba/dam/assets/160413134216-playoffs-2016-official-t1-creative.home-t1.jpg" alt="http://www.nba.com/news/2016-nba-playoffs-first-round-schedule/" align="center" width="600" height="250">
 		<hr>
 		<p> This webpage is a blog to discuss NBA playoff predictions, write who are your top 8 teams from the western conference and the eastern conference, who are going to be out in each playoff round and what the overall score would be, and finally share who you think will be the new 2018 NBA champ and its most valuable player (MVP) </p>
 		<p> Hello, ${fn:escapeXml(user.nickname)}! (You can <a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.) If you wish to participate in this blog please click in the "Create a new post" button</p>
@@ -55,7 +55,7 @@
 	%>
 	
 		<h1>2018 NBA playoff predictions</h1>
-		<img src="http://i2.cdn.turner.com/nba/nba/dam/assets/160413134216-playoffs-2016-official-t1-creative.home-t1.jpg" alt="http://www.nba.com/news/2016-nba-playoffs-first-round-schedule/" align="middle" width="600" height="250">
+		<img src="http://i2.cdn.turner.com/nba/nba/dam/assets/160413134216-playoffs-2016-official-t1-creative.home-t1.jpg" alt="http://www.nba.com/news/2016-nba-playoffs-first-round-schedule/" align="center" width="600" height="250">
 		<hr>
 		<p> This webpage is a blog to discuss NBA playoff predictions, write who are your top 8 teams from the western conference and the eastern conference, who are going to be out in each playoff round and what the overall score would be, and finally share who you think will be the new 2018 NBA champ and its most valuable player (MVP) </p>
 		<p> In order to participate in this blog you will have to <a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a> </p>
