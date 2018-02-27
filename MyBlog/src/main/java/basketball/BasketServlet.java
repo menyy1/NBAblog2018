@@ -26,11 +26,16 @@ public class BasketServlet extends HttpServlet{
         String title = req.getParameter("title");
         String content = req.getParameter("content");
         Date date = new Date();
-
-        Landing greeting = new Landing(user, content, guestbookName, title);
-        ofy().save().entity(greeting).now();
         
-        resp.sendRedirect("/basketLand.jsp?guestbookName=" + guestbookName);
+        if(title.equals("") || content.equals("")) {
+        		resp.sendRedirect("/repostPost.jsp?guestbookName=" + guestbookName);
+        }
+        else {
+        		Landing greeting = new Landing(user, content, guestbookName, title);
+        		ofy().save().entity(greeting).now();
+        
+        		resp.sendRedirect("/basketLand.jsp?guestbookName=" + guestbookName);
+        }
 	}
 
 }

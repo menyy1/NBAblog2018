@@ -14,9 +14,32 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.*;
 
-import javax.mail.*;
-import javax.mail.internet.*;
-import javax.activation.*;
+//import javax.mail.*;
+//import javax.mail.internet.*;
+//import javax.activation.*;
+
+//import com.sendgrid.ASM;
+//import com.sendgrid.Attachments;
+//import com.sendgrid.BccSettings;
+//import com.sendgrid.ClickTrackingSetting;
+////import com.sendgrid.Client;
+//import com.sendgrid.Content;
+////import com.sendgrid.Email;
+//import com.sendgrid.FooterSetting;
+//import com.sendgrid.GoogleAnalyticsSetting;
+//import com.sendgrid.Mail;
+//import com.sendgrid.MailSettings;
+////import com.sendgrid.Method;
+//import com.sendgrid.OpenTrackingSetting;
+//import com.sendgrid.Personalization;
+////import com.sendgrid.Request;
+////import com.sendgrid.Response;
+//import com.sendgrid.SendGrid;
+//import com.sendgrid.Setting;
+//import com.sendgrid.SpamCheckSetting;
+//import com.sendgrid.SubscriptionTrackingSetting;
+//import com.sendgrid.TrackingSettings;
+import com.sendgrid.*;
 
 import basketball.Landing;
 
@@ -35,11 +58,12 @@ public class SubCronServlet extends HttpServlet {
 		return textMsg;
 	}
 	@Override
-   public void doGet(HttpServletRequest request, HttpServletResponse response)
+   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws IOException {
 	   
 	 ArrayList<Landing> x = new ArrayList<Landing>();
-	   
+	 
+		
 	   UserService userService = UserServiceFactory.getUserService();
        User user = userService.getCurrentUser();
        
@@ -53,69 +77,49 @@ public class SubCronServlet extends HttpServlet {
        ObjectifyService.register(Landing.class);
 		List<Landing> greetings = ObjectifyService.ofy().load().type(Landing.class).list();   
 		Collections.sort(greetings); 
-       
-       
-       
-      // Recipient's email ID needs to be mentioned.
-      String to = "lopez.manuel214@gmail.com";
- 
-      // Sender's email ID needs to be mentioned
-      String from = "lopez.manuel214@gmail.com";
- 
-      // Assuming you are sending email from localhost
-      String host = "10.145.255.255";
- 
-      // Get system properties
-      Properties properties = System.getProperties();
- 
-      // Setup mail server
-      properties.setProperty("mail.smtp.host", host);
- 
-      // Get the default Session object.
-      Session session = Session.getInstance(properties, null);
-      
-      // Set response content type
-      response.setContentType("text/html");
-      PrintWriter out = response.getWriter();
+		
+		String digest = "";
+		
+		if(!greetings.isEmpty()) {
+       	 
+       	 for (Landing greeting: greetings) {
+       		 _logger.info("Last 24 hrs? " + (greeting.getDate().before(now) && greeting.getDate().after(yesterday)));
+       		 if(greeting.getDate().before(now) && greeting.getDate().after(yesterday))
+           		x.add(greeting);
+           }
+       	 if(!x.isEmpty()) {
+       		 digest = latest24(x);
+       	 }
+		}
+		
+		Email from = new Email("lopez.manuel214@gmail.com	");
+	    String subject = "Testing Blog";
+	    Email to = new Email("lopez.manuel214@gmail.com");
+	    Content content = new Content("text/plain", digest);
+	    
+	    Mail mail = new Mail(from, subject, to, content);
+	    
+
+	    SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+	    _logger.info(sg.toString());
+	    Request request = new Request();
 
       try {
-         // Create a default MimeMessage object.
-         MimeMessage message = new MimeMessage(session);
+    	  
+    	  	  request.setMethod(Method.POST);
+          request.setEndpoint("mail/send");
+          request.setBody(mail.build());
+          Response response = sg.api(request);
+          System.out.println(response.getStatusCode());
+          System.out.println(response.getBody());
+          System.out.println(response.getHeaders());
          
-         // Set From: header field of the header.
-         message.setFrom(new InternetAddress(from));
          
-         // Set To: header field of the header.
-         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-         
-         // Set Subject: header field
-         message.setSubject("This is the Subject Line!");
-         
-         out.println(greetings.toString());
-         // Now set the actual message
-         _logger.info("does greeting contain data? " + !greetings.isEmpty());
-         if(!greetings.isEmpty()) {
-        	 
-        	 for (Landing greeting: greetings) {
-        		 _logger.info("Last 24 hrs? " + (greeting.getDate().before(now) && greeting.getDate().after(yesterday)));
-        		 if(greeting.getDate().before(now) && greeting.getDate().after(yesterday))
-            		x.add(greeting);
-            }
-        	 if(!x.isEmpty()) {
-        		 String digest = latest24(x);
-        		 _logger.info(digest);
-        	 
-        	 	message.setText(digest);
-         // Send message
-        	 	Transport.send(message);
-        	 }
-         }
-         
-      } catch (MessagingException mex) {
+      } catch (Exception mex) {
          mex.printStackTrace();
       }
       
-      response.sendRedirect("/basketLand.jsp?guestbookName=" + "default");
+      resp.sendRedirect("/basketLand.jsp?guestbookName=" + "default");
    }
    
    @Override

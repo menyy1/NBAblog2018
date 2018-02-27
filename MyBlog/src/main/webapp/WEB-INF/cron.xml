@@ -3,6 +3,6 @@
 <cron>
 <url>/cron/subscribe</url>
 <description>Digest of new messages in the last 24 hrs.</description>
-<schedule>every 3 minutes</schedule>
+<schedule>every 24 hours</schedule>
 </cron>
 </cronentries>

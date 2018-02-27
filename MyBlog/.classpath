@@ -28,5 +28,9 @@
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/activation.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/javax.mail.jar"/>
 	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/smtp-1.4.5-sources.jar"/>
+	<classpathentry kind="lib" path="/Users/manuellopez/Downloads/opt/gradle/gradle-4.5.1/lib/plugins/gradle-maven-4.5.1.jar"/>
+	<classpathentry kind="lib" path="/Users/manuellopez/Downloads/opt/gradle/gradle-4.5.1/lib/plugins/gradle-build-comparison-4.5.1.jar"/>
+	<classpathentry kind="lib" path="/Users/manuellopez/Downloads/opt/gradle/gradle-4.5.1/lib/plugins/gradle-build-init-4.5.1.jar"/>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/sendgrid-java-latest.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

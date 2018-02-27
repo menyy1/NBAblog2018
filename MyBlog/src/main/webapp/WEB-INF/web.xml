@@ -33,6 +33,21 @@
         <url-pattern>/bask</url-pattern>
 
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>basket</servlet-name>
+
+        <servlet-class>basketball.BasketServlet</servlet-class>
+
+    </servlet>
+
+    <servlet-mapping>
+
+        <servlet-name>basket</servlet-name>
+
+        <url-pattern>/basket</url-pattern>
+
+    </servlet-mapping>
 
  <servlet>
         <servlet-name>subscription</servlet-name>
