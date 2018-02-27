@@ -74,18 +74,21 @@ public class SubCronServlet extends HttpServlet {
 
 	    Properties props = new Properties();
 	    Session session = Session.getDefaultInstance(props, null);
-
+	    _logger.info("Sending email");
 	    try {
 	      Message msg = new MimeMessage(session);
-	      msg.setFrom(new InternetAddress("lopez.manuel214@gmail.com"));
+	      msg.setFrom(new InternetAddress("no-reply@homework3-196300.appspotmail.com"));
 	      msg.addRecipient(Message.RecipientType.TO,
 	                       new InternetAddress("lopez.manuel214@gmail.com"));
 	      msg.setSubject("Digest of the last 24 hrs");
 	      msg.setText(digest);
 	      Transport.send(msg);
+	      _logger.info("finishing sending email");
 	      
 	    } catch (Exception e) {
 	    		_logger.info("error");
+	    		_logger.info(e.getMessage());
+	    		e.printStackTrace();
       }
       
       resp.sendRedirect("/basketLand.jsp?guestbookName=" + "default");
